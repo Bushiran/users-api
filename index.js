@@ -1,27 +1,27 @@
-const express =require("express")
-const userRoute = require("./routes/usersRoutes")
-const path = require("path");
+const express = require("express");
+const morgan = require("morgan");
+require("dotenv").config();
+const connectDB = require("./config/connectDB")
+const userRoutes = require("./routes/userRoutes")
 
-const app = express()
+
+const app = express();
+
+connectDB();
 
 //middlewares
-app.use(express.json());
-app.use(userRoute);
+app.use(express.json())
+app.use(morgan("dev"))
+app.use("/users", userRoutes)
 
 //home route
 app.get("/", (req, res)=>{
-    res.sendFile(path.join(__dirname + "/pages/index.html"))
+    res.json("<h1>WELCOME TO OUR SCHOOL API</h1>")
 })
 
-app.get("/*", (req, res)=>{
-    res.status(400).sendFile(path.join(__dirname + "/pages/404.html"))
-})
+const PORT = process.env.PORT||6000
 
-
-const PORT = 5000;
 
 app.listen(PORT, ()=>{
-    console.log("SERVER IS UP")
+    console.log("Server is active")
 })
-
-
